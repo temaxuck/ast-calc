@@ -26,3 +26,5 @@ int main() {
 
 ### TODOs
 1. Refactor `ast.h` and `astlexer.h` as STB-style libs.
+2. Add more operators
+3. Add REPL
