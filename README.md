@@ -1,6 +1,6 @@
 # AST Calculator
 
-A basic program that parses arithmetical expressions and builds [Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree), which can be then evaluated.
+A basic program that parses arithmetical expressions and builds [Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree), which can be then evaluated. The project was created for educational and recreational purposes, so please don't expect much from it.
 
 ## Usage
 
