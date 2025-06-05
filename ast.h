@@ -76,8 +76,8 @@ double ast_eval(ASTNode *root) {
 
 void ast_free_node(ASTNode *root) {
     if (root == NULL) return;
-    if (root->expr->lvalue != NULL) ast_free_node(root->expr->lvalue);
-    if (root->expr->rvalue != NULL) ast_free_node(root->expr->rvalue);
+    if (root->expr.lvalue != NULL) ast_free_node(root->expr.lvalue);
+    if (root->expr.rvalue != NULL) ast_free_node(root->expr.rvalue);
 }
 
 #ifdef ASTPARSER
