@@ -69,6 +69,12 @@ double ast_eval(ASTNode *root) {
     }
 }
 
+void ast_free_node(ASTNode *root) {
+    if (root == NULL) return;
+    if (root->expr->lvalue != NULL) ast_free_node(root->expr->lvalue);
+    if (root->expr->rvalue != NULL) ast_free_node(root->expr->rvalue);
+}
+
 #ifdef ASTPARSER
 #include <string.h>
 #include "astlexer.h"
@@ -141,6 +147,7 @@ ASTNode *astparser_term(ASTLexer *l, ASTLexerToken *t) {
         astlexer_get_token(l, t); // consume the peeked token
         ASTNode *rvalue = astparser_factor(l, t);
         if (!rvalue) {
+            ast_free_node(op_node);
             astparser_report_error("Expected number or expression", t->loc);
             return NULL;
         }
@@ -171,6 +178,7 @@ ASTNode *astparser_expr(ASTLexer *l, ASTLexerToken *t) {
         astlexer_get_token(l, t); // consume the peeked token
         ASTNode *rvalue = astparser_term(l, t);
         if (!rvalue) {
+            ast_free_node(op_node);
             astparser_report_error("Expected number or expression", t->loc);
             return NULL;
         }
