@@ -10,7 +10,7 @@ int main() {
     if (!root) {
         printf("ERROR: %s (at %ld)\n", err.msg, err.loc);
     } else {
-        printf("Eval: %lf\n", ast_eval(root));
+        printf("Eval: %g\n", ast_eval(root));
     }
 
     return 0;
