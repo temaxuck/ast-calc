@@ -31,7 +31,7 @@ ERROR: Unexpected character 'e' (at 12)
 ## REPL
 You can use REPL to test the AST Calculator:
 1. Build and run it: `make repl`;
-2. User REPL:
+2. Use REPL:
 ```
 *AST Calculator REPL*
 To quit press CTRL+C or type 'q' into the input
