@@ -1,9 +1,10 @@
-/* ast.h - AST nodes and methods. 
+/* ast.h - AST nodes and methods.
  *
- * Define flag `ASTPARSER` to include parsing feature as well. 
+ * Define flag `ASTPARSER` to include parsing feature as well.
  */
 
 #include <assert.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -16,6 +17,7 @@ typedef enum {
     AST_OP_MINUS,
     AST_OP_MULTIPLY,
     AST_OP_DIVIDE,
+    AST_OP_POWER,
 } ASTOp;
 
 typedef struct ASTNode {
@@ -60,6 +62,8 @@ double ast_handle_op(double lvalue, double rvalue, ASTOp op) {
             exit(2);
         }
         return lvalue / rvalue;
+    case AST_OP_POWER:
+        return pow(lvalue, rvalue);
     default:
         assert(false && "Unreachable");
     }
@@ -67,8 +71,10 @@ double ast_handle_op(double lvalue, double rvalue, ASTOp op) {
 
 double ast_eval(ASTNode *root) {
     switch (root->t) {
-    case AST_NODE_NUM: return root->value;
-    case AST_NODE_OP: return ast_handle_op(ast_eval(root->expr.lvalue), ast_eval(root->expr.rvalue), root->expr.op);
+    case AST_NODE_NUM:
+        return root->value;
+    case AST_NODE_OP:
+        return ast_handle_op(ast_eval(root->expr.lvalue), ast_eval(root->expr.rvalue), root->expr.op);
     default:
         assert(false && "Unreachable");
     }
@@ -84,8 +90,8 @@ void ast_free_node(ASTNode *root) {
 #include <string.h>
 #include "astlexer.h"
 
-#define PUNCTS_COUNT 6
-const char *puncts[PUNCTS_COUNT] = {"+", "-", "*", "/", "(", ")"};
+#define PUNCTS_COUNT 7
+const char *puncts[PUNCTS_COUNT] = {"+", "-", "*", "^", "/", "(", ")"};
 
 typedef struct {
     const char *msg;
@@ -147,8 +153,10 @@ ASTNode *astparser_term(ASTLexer *l, ASTLexerToken *t) {
             op_node = ast_op(AST_OP_MULTIPLY, root, NULL); // right value to be added later
         else if (astlexer_token_cmp_cstr(t, "/"))
             op_node = ast_op(AST_OP_DIVIDE, root, NULL); // right value to be added later
+        else if (astlexer_token_cmp_cstr(t, "^"))
+            op_node = ast_op(AST_OP_POWER, root, NULL); // right value to be added later
         else break;
-        
+
         astlexer_get_token(l, t); // consume the peeked token
         ASTNode *rvalue = astparser_factor(l, t);
         if (!rvalue) {
@@ -159,7 +167,7 @@ ASTNode *astparser_term(ASTLexer *l, ASTLexerToken *t) {
         op_node->expr.rvalue = rvalue;
         root = op_node;
     }
-    
+
     return root;
 }
 
@@ -179,7 +187,7 @@ ASTNode *astparser_expr(ASTLexer *l, ASTLexerToken *t) {
         else if (astlexer_token_cmp_cstr(t, "-"))
             op_node = ast_op(AST_OP_MINUS, root, NULL); // right value to be added later
         else break;
-        
+
         astlexer_get_token(l, t); // consume the peeked token
         ASTNode *rvalue = astparser_term(l, t);
         if (!rvalue) {
@@ -190,7 +198,7 @@ ASTNode *astparser_expr(ASTLexer *l, ASTLexerToken *t) {
         op_node->expr.rvalue = rvalue;
         root = op_node;
     }
-    
+
     return root;
 }
 
@@ -201,7 +209,7 @@ ASTNode *astparser_parse(const char *input) {
     ASTLexerToken t = {0};
 
     ASTNode *root = astparser_expr(&l, &t);
-    
+
     if (l.pos < l.size) {
         char *buf = malloc(128*sizeof(char));
         sprintf(buf, "Unexpected character '%c'", l.input[l.pos]);
