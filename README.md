@@ -17,7 +17,7 @@ int main() {
     if (!root) {
         printf("ERROR: %s (at %ld)\n", err.msg, err.loc);
     } else {
-        printf("Eval: %lf\n", ast_eval(root));
+        printf("Eval: %g\n", ast_eval(root));
     }
 
     return 0;
@@ -27,8 +27,26 @@ This example produces this output:
 ```
 ERROR: Unexpected character 'e' (at 12)
 ```
+
+## REPL
+You can use REPL to test the AST Calculator:
+1. Build and run it: `make repl`;
+2. User REPL:
+```
+*AST Calculator REPL*
+To quit press CTRL+C or type 'q' into the input
+> cool
+ERROR: Unexpected character 'c'
+'cool'
+ ^
+> 321 + 213
+=> 534
+> 123 + 2 * 3 * 5 / 3
+=> 133
+```
+
 ### TODOs
 1. Refactor `ast.h` and `astlexer.h` as STB-style libs.
 2. Add more operators
 3. Add mathematical constants (e, pi, etc.)
-4. Add REPL
+~~4. Add REPL~~

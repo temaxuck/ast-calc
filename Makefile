@@ -1,14 +1,19 @@
 BUILD_DIR	?= build
 CC			?= gcc
 DEBUG       ?=
-CC_FLAGS	?= -Wall $(if $(DEBUG),-ggdb,) -o $(BUILD_DIR)/main 
-TARGET_FILE ?= repl.c
+CC_FLAGS	?= -Wall $(if $(DEBUG),-ggdb,)
+TARGET_FILE ?= example.c
+OUT_FILE    ?= main
 
-.PHONY: build run
+.PHONY: build run repl
+
+repl: override TARGET_FILE = repl.c
+repl: override OUT_FILE = repl
+repl: run
+
+run: build
+	$(BUILD_DIR)/$(OUT_FILE)
 
 build:
 	mkdir -p $(BUILD_DIR)
-	$(CC) $(CC_FLAGS) $(TARGET_FILE)
-
-run: build
-	$(BUILD_DIR)/main
+	$(CC) $(CC_FLAGS) -o $(BUILD_DIR)/$(OUT_FILE) $(TARGET_FILE)
