@@ -49,4 +49,4 @@ ERROR: Unexpected character 'c'
 1. Refactor `ast.h` and `astlexer.h` as STB-style libs.
 2. Add more operators
 3. Add mathematical constants (e, pi, etc.)
-~~4. Add REPL~~
+4. ~~Add REPL~~
