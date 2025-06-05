@@ -1,3 +1,8 @@
+/* ast.h - AST nodes and methods. 
+ *
+ * Define flag `ASTPARSER` to include parsing feature as well. 
+ */
+
 #include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -88,16 +93,16 @@ typedef struct {
     size_t loc;
 } ASTParserError;
 
-ASTParserError _err = {0};
+ASTParserError _astparser_err = {0};
 
 ASTParserError astparser_get_error() {
-    return _err;
+    return _astparser_err;
 }
 
 void astparser_report_error(const char *msg, size_t loc) {
-    _err.msg = msg;
-    _err.msg_len = strlen(msg);
-    _err.loc = loc;
+    _astparser_err.msg = msg;
+    _astparser_err.msg_len = strlen(msg);
+    _astparser_err.loc = loc;
 }
 
 ASTNode *astparser_factor(ASTLexer *l, ASTLexerToken *t);
