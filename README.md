@@ -11,7 +11,7 @@ A basic program that parses arithmetical expressions and builds [Abstract Syntax
 #include "ast.h"
 
 int main() {
-    const char *input = "1.2 + 32 + e";
+    const char *input = "2 * PI - e + 128 / 7";
     ASTNode *root = astparser_parse(input);
     ASTParserError err = astparser_get_error();
     if (!root) {
@@ -25,7 +25,7 @@ int main() {
 ```
 This example produces this output:
 ```
-ERROR: Unexpected character 'e' (at 12)
+Eval: 21.8506
 ```
 
 ## REPL
