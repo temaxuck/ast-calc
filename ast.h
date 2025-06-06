@@ -93,6 +93,10 @@ void ast_free_node(ASTNode *root) {
 #define PUNCTS_COUNT 7
 const char *puncts[PUNCTS_COUNT] = {"+", "-", "*", "^", "/", "(", ")"};
 
+void astparser_cstr_tolower(char *cstr, size_t len) {
+    for (size_t i = 0; i < len; i++) cstr[i] = tolower(cstr[i]);
+}
+
 typedef struct {
     const char *msg;
     size_t msg_len;
@@ -134,8 +138,14 @@ ASTNode *astparser_factor(ASTLexer *l, ASTLexerToken *t) {
         }
         return node;
     }
+    if (t->t == ASTLEXER_SYMBOL) {
+        char *symbol = astlexer_token_to_cstr(t);
+        astparser_cstr_tolower(symbol, strlen(symbol));
+        if (strcmp(symbol, "pi") == 0) return ast_number(M_PI);
+        if (strcmp(symbol, "e") == 0) return ast_number(M_E);
+        astparser_report_error("Unknown symbol", t->loc);
+    }
 
-    astparser_report_error("NAN", t->loc);
     return NULL;
 }
 
@@ -209,7 +219,6 @@ ASTNode *astparser_parse(const char *input) {
     ASTLexerToken t = {0};
 
     ASTNode *root = astparser_expr(&l, &t);
-
     if (l.pos < l.size) {
         char *buf = malloc(128*sizeof(char));
         sprintf(buf, "Unexpected character '%c'", l.input[l.pos]);

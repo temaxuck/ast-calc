@@ -10,7 +10,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum { ASTLEXER_NUMBER, ASTLEXER_PUNCT, ASTLEXER_EOI } ASTLexerKind;
+typedef enum {
+    ASTLEXER_NUMBER,
+    ASTLEXER_PUNCT,
+    ASTLEXER_SYMBOL,
+    ASTLEXER_EOI
+} ASTLexerKind;
 
 typedef struct {
     ASTLexerKind t;
@@ -89,6 +94,15 @@ bool astlexer_get_token(ASTLexer *l, ASTLexerToken *t) {
 
             return true;
         }
+    }
+ 
+    if (isalnum(l->input[l->pos])) {
+        t->t = ASTLEXER_SYMBOL;
+        size_t n = 0;
+        while (l->pos + n < l->size && isalnum(l->input[l->pos + n])) n++;
+        t->end += n;
+        astlexer_next_n_chars(l, n);
+        return true;
     }
 
     return false;

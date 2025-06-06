@@ -47,6 +47,6 @@ ERROR: Unexpected character 'c'
 
 ### TODOs
 1. Refactor `ast.h` and `astlexer.h` as STB-style libs.
-2. Add more operators
-3. Add mathematical constants (e, pi, etc.)
+2. Add more operators (~~raise_to_power~~, log, ln, cos, sin, tan); 
+3. ~~Add mathematical constants (e, pi, etc.)~~
 4. ~~Add REPL~~
